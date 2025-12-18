@@ -22,28 +22,26 @@ We use:
 * ruff - logical and stylistic lint, security linter, and more
 * safety - security check for requirements
 
-### Branch and commit naming convention
+## Git Standards
 
-We follow gitflow's branch model:
+### Commit Message Format
+Use semantic commits for clear change tracking:
 
-* `feature/NAME` - for any tasks, improvements
-* `bugfix/NAME` - for bugs that will be released to staging/dev only
-* `hotfix/NAME` - for hotfixes that will be released to the live
+```
+feat(user): Add ability to reset password
+fix(login): Fix issue preventing users from logging in
+refactor(payment): Simplify payment processing code
+style(user): Format user profile page
+```
 
-NAME should follow these rules:
+### Commit Types:
+- **feat**: A new feature or enhancement to existing functionality
+- **fix**: A bug fix or correction to existing functionality  
+- **refactor**: Changes that improve code structure, readability, or maintainability without adding features or fixing bugs
+- **style**: Changes to formatting, code layout that do not affect functionality
 
-* NAME should start with task ID, eg. `feature/MYPROJ-2020`
-* add a short description to name with lowercase and using hyphen between words: e.g `feature/MYPROJ-2020-add-new-button-to-create-user`
-
-All commit's comments should start with task ID and then a short description. For example:
-
-* `MYPROJ-2895 - fixed bug related to some feature`
-* `MYPROJ-2859 - Implemented new functionality`
-
-
-### Pull request merge flow
-
-Each developer should merge his own pull requests. Highly recommended the following settings:
-
-* The main branches (`develop`, `master`, `staging`, etc.) should be protected for merging into these branches directly, **only through pull requests**.
-* At least one approve required in order to have ability to merge the pull request.
+### Workflow:
+- Work directly on main branch for most changes
+- Use feature branches only for experimental or large changes
+- Commit frequently with descriptive messages
+- Each commit should represent a logical unit of work
