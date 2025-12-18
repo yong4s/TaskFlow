@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+docker-compose run --rm --entrypoint "python manage.py" backend $@

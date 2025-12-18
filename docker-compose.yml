@@ -1,0 +1,35 @@
+version: '3.13'
+
+volumes:
+  pg_data:
+    driver: local
+
+x-base: &base-backend
+  environment:
+    DATABASE_URL: postgres://db_user:db_password@db:5432/db_name
+    DEBUG: "on"
+    ENVIRONMENT: development
+    ALLOWED_HOSTS: localhost,0.0.0.0
+  volumes:
+    - .:/code:delegated
+  depends_on:
+    - db
+
+services:
+  db:
+    image: library/postgres:13
+    volumes:
+      - "pg_data:/var/lib/postgresql/data"
+    environment:
+      POSTGRES_DB: db_name
+      POSTGRES_USER: db_user
+      POSTGRES_PASSWORD: db_password
+    ports:
+      - "5432:5432"
+
+  backend:
+    <<: *base-backend
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - "8000:8000"

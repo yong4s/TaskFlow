@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+CMD="${@:-run --all-files}"
+
+docker-compose run --rm --entrypoint "pre-commit" backend $CMD
