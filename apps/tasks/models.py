@@ -40,10 +40,10 @@ class Task(models.Model):
         db_table = 'tasks_task'
         ordering = ['-created_at']
         indexes = [
-            models.Index(fields=['project', 'status', '-created_at'], name='idx_tasks_project_status_created'),
-            models.Index(fields=['deadline'], name='idx_tasks_deadline', condition=models.Q(deadline__isnull=False)),
-            models.Index(fields=['deadline', 'status'], name='idx_tasks_deadline_status', condition=models.Q(deadline__isnull=False)),
-            models.Index(fields=['-updated_at'], name='idx_tasks_updated'),
+            models.Index(fields=['project', 'status', '-created_at'], name='idx_task_proj_status_created'),
+            models.Index(fields=['deadline'], name='idx_task_deadline', condition=models.Q(deadline__isnull=False)),
+            models.Index(fields=['deadline', 'status'], name='idx_task_deadline_status', condition=models.Q(deadline__isnull=False)),
+            models.Index(fields=['-updated_at'], name='idx_task_updated'),
         ]
 
     def __str__(self):

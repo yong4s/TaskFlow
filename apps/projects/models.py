@@ -17,8 +17,8 @@ class Project(models.Model):
         db_table = 'tasks_project'
         ordering = ['-created_at']
         indexes = [
-            models.Index(fields=['user', '-created_at'], name='idx_projects_user_created'),
-            models.Index(fields=['-updated_at'], name='idx_projects_updated'),
+            models.Index(fields=['user', '-created_at'], name='idx_proj_user_created'),
+            models.Index(fields=['-updated_at'], name='idx_proj_updated'),
         ]
 
     def __str__(self):
