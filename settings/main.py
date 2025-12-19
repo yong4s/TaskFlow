@@ -4,7 +4,6 @@ from .base import *
 
 INSTALLED_APPS += [
     'django_extensions',
-    'apps.accounts',
 ]
 
 AUTH_USER_MODEL = 'accounts.User'
