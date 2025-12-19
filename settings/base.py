@@ -50,6 +50,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # Local apps
+    'apps.accounts',
+    'apps.projects',
+    'apps.tasks',
 ]
 
 ROOT_URLCONF = 'apps.urls'
@@ -80,6 +84,9 @@ DATABASES = {
     'default': env.db('DATABASE_URL'),
 }
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Custom User Model
+AUTH_USER_MODEL = 'accounts.User'
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
