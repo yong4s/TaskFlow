@@ -131,3 +131,6 @@ Thumbs.db
 # Claude Code files
 CLAUDE.md
 .claude/
+
+# Development plans  
+DEVELOPMENT_PLAN.md
