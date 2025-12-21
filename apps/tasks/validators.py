@@ -10,8 +10,7 @@ if TYPE_CHECKING:
 
 
 class TaskValidator:
-    """Validator for task-related business rules and permissions."""
-    
+
     MAX_TITLE_LENGTH = 255
     MIN_PRIORITY = 1
     MAX_PRIORITY = 5

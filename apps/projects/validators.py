@@ -8,8 +8,7 @@ if TYPE_CHECKING:
 
 
 class ProjectValidator:
-    """Validator for project-related business rules and permissions."""
-    
+
     MAX_NAME_LENGTH = 255
     
     def validate_name_format(self, name: str) -> str:
@@ -42,13 +41,11 @@ class ProjectValidator:
             raise PermissionDeniedError(message)
     
     def validate_create_project(self, user: 'User', name: str, existing_projects: List['Project']) -> str:
-        """Complete validation for project creation."""
         clean_name = self.validate_name_format(name)
         self.validate_unique_name(existing_projects, clean_name)
         return clean_name
     
     def validate_update_project(self, user: 'User', project: 'Project', existing_projects: List['Project'], name: str = None) -> Optional[str]:
-        """Complete validation for project update."""
         self.validate_ownership(user, project)
         
         if name is not None:
