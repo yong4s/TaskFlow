@@ -4,6 +4,7 @@ from django.db.models import QuerySet
 
 from .dal import ProjectRepository
 from .validators import ProjectValidator
+from apps.utils.exceptions import ValidationError
 
 if TYPE_CHECKING:
     from apps.accounts.models import User
@@ -18,8 +19,13 @@ class ProjectService:
         self.validator = validator or ProjectValidator()
 
     def create_project(self, user: 'User', name: str) -> 'Project':
-        existing_projects = list(self.project_dal.get_by_user(user))
-        clean_name = self.validator.validate_create_project(user, name, existing_projects)
+        # Format validation
+        clean_name = self.validator.validate_name_format(name)
+        
+        # Business rule: check for duplicates
+        if self.project_dal.filter_by(user=user, name__iexact=clean_name).exists():
+            raise ValidationError('name', 'Project with this name already exists')
+        
         return self.project_dal.create(user=user, name=clean_name)
 
     def update_project(self, user: 'User', project_id: int, **kwargs) -> 'Project':
@@ -28,10 +34,14 @@ class ProjectService:
         
         # Validate name if provided
         if 'name' in kwargs:
-            existing_projects = list(self.project_dal.get_by_user(user))
-            clean_name = self.validator.validate_update_project(user, project, existing_projects, kwargs['name'])
-            if clean_name:
-                kwargs['name'] = clean_name
+            clean_name = self.validator.validate_update_project_name(user, project, kwargs['name'])
+            
+            # Business rule: check for duplicates (excluding current project)
+            existing = self.project_dal.filter_by(user=user, name__iexact=clean_name).exclude(id=project.id)
+            if existing.exists():
+                raise ValidationError('name', 'Project with this name already exists')
+            
+            kwargs['name'] = clean_name
         else:
             self.validator.validate_ownership(user, project)
 
@@ -49,4 +59,4 @@ class ProjectService:
         project = self.project_dal.get_by_id(project_id)
         self.validator.validate_access_project(user, project)
         return project
-
+    

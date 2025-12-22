@@ -27,14 +27,13 @@ class TaskService:
             self._project_service = ProjectService()
         return self._project_service
     
-    def create_task(self, user: 'User', project_id: int, title: str, description: str = '') -> Model:
+    def create_task(self, user: 'User', project_id: int, title: str) -> Model:
         project = self.project_service.get_user_project(user, project_id)
         
-        clean_title = self.validator.validate_create_task(user, title, description)
+        clean_title = self.validator.validate_create_task(title)
         
         return self.task_dal.create(
             name=clean_title,
-            description=description,
             project=project,
             status=Task.Status.NEW,
             priority=Task.Priority.MEDIUM
@@ -45,7 +44,7 @@ class TaskService:
         task = self.task_dal.get_by_id(task_id)
         
         validated_data = self.validator.validate_update_task(
-            user, 
+            user,
             task,
             title=kwargs.get('title'),
             priority=kwargs.get('priority'),
@@ -80,3 +79,18 @@ class TaskService:
     
     def get_user_tasks(self, user: 'User') -> QuerySet:
         return self.task_dal.get_by_user(user)
+    
+    def toggle_task_status(self, user: 'User', task_id: int) -> Model:
+        """Toggle task completion status between new/done."""
+        task = self.task_dal.get_by_id(task_id)
+        self.validator.validate_ownership(user, task)
+        
+        new_status = Task.Status.NEW if task.status == Task.Status.DONE else Task.Status.DONE
+        return self.task_dal.update(task, status=new_status)
+    
+    def get_user_task(self, user: 'User', task_id: int) -> Model:
+        """Get task with permission checks."""
+        task = self.task_dal.get_by_id(task_id)
+        self.validator.validate_ownership(user, task)
+        return task
+    
