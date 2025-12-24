@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Sign In - Task Flow{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6 col-md-8 col-sm-10">
+        
+        <div class="project-card">
+            <div class="project-header text-center">
+                <h2 class="project-title mb-0">
+                    <i class="bi bi-box-arrow-in-right me-2"></i>
+                    Sign In to Task Flow
+                </h2>
+            </div>
+            
+            <div class="p-4">
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
+                
+                <form method="post" action="{% url 'account_login' %}">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="id_login" class="form-label">Email Address</label>
+                        <input type="email" 
+                               class="form-control form-control-custom" 
+                               id="id_login" 
+                               name="login" 
+                               value="{{ form.login.value|default:'' }}"
+                               required 
+                               autofocus
+                               placeholder="Enter your email address">
+                        {% if form.login.errors %}
+                            <div class="text-danger mt-1">{{ form.login.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="id_password" class="form-label">Password</label>
+                        <input type="password" 
+                               class="form-control form-control-custom" 
+                               id="id_password" 
+                               name="password" 
+                               required
+                               placeholder="Enter your password">
+                        {% if form.password.errors %}
+                            <div class="text-danger mt-1">{{ form.password.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="id_remember" name="remember">
+                        <label class="form-check-label" for="id_remember">
+                            Remember me
+                        </label>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-global-add">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>
+                            Sign In
+                        </button>
+                    </div>
+                    
+                    <hr class="my-4">
+                    
+                    <div class="text-center">
+                        <p class="mb-0">Don't have an account?</p>
+                        <a href="{% url 'account_signup' %}" class="btn btn-outline-primary mt-2">
+                            <i class="bi bi-person-plus me-2"></i>
+                            Create Account
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+    </div>
+</div>
+{% endblock %}

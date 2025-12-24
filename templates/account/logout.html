@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Sign Out - Task Flow{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6 col-md-8 col-sm-10">
+        
+        <div class="project-card">
+            <div class="project-header text-center">
+                <h2 class="project-title mb-0">
+                    <i class="bi bi-box-arrow-right me-2"></i>
+                    Sign Out
+                </h2>
+            </div>
+            
+            <div class="p-4 text-center">
+                <p class="mb-4">Are you sure you want to sign out?</p>
+                
+                <form method="post" action="{% url 'account_logout' %}" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-global-add me-3">
+                        <i class="bi bi-box-arrow-right me-2"></i>
+                        Yes, Sign Out
+                    </button>
+                </form>
+                
+                <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left me-2"></i>
+                    Cancel
+                </a>
+            </div>
+        </div>
+        
+    </div>
+</div>
+{% endblock %}

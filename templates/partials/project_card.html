@@ -1,0 +1,102 @@
+<div class="project-card" id="project-{{ project.id }}" x-data="{ editing: {% if editing_mode %}true{% else %}false{% endif %} }">
+    <div class="project-header">
+        <div class="d-flex align-items-center flex-grow-1">
+            <i class="bi bi-calendar3 me-2" style="font-size: 1.2rem; opacity: 0.6;"></i>
+            
+            <span x-show="!editing" 
+                  @click="editing = true" 
+                  class="project-title" 
+                  style="cursor: pointer;"
+                  title="Click to edit">{{ project.name }}</span>
+            
+            <template x-if="editing">
+                <form hx-post="{% url 'projects:update' project.id %}"
+                      hx-headers='{"X-HTTP-Method-Override": "PATCH"}'
+                      hx-target="#project-{{ project.id }}"
+                      hx-swap="outerHTML"
+                      hx-on::before-request="console.log('Form submitting')"
+                      hx-on::after-request="console.log('Form submitted')"
+                      class="d-flex align-items-center flex-grow-1"
+                      x-init="htmx.process($el)">
+                    {% csrf_token %}
+                    <div class="flex-grow-1 me-2">
+                        <input type="text" 
+                               name="name"
+                               value="{{ project.name }}"
+                               class="form-control form-control-sm{% if form_errors.name %} is-invalid{% endif %}"
+                               @keydown.enter="$el.closest('form').dispatchEvent(new Event('submit'))" 
+                               @keydown.escape="editing = false"
+                               x-init="$nextTick(() => $el.focus())"
+                               autofocus>
+                        {% if form_errors.name %}
+                            <div class="invalid-feedback">
+                                {{ form_errors.name.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <button type="submit" class="btn btn-sm btn-success me-1" title="Save">
+                        <i class="bi bi-check-lg"></i>
+                    </button>
+                    <button type="button" class="btn btn-sm btn-secondary" @click="editing = false" title="Cancel">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </form>
+            </template>
+        </div>
+        
+        <div class="header-actions">
+            <i class="bi bi-pencil-fill" @click="editing = true" title="Edit project name"></i>
+            <i class="bi bi-trash-fill" 
+               hx-post="{% url 'projects:delete' project.id %}"
+               hx-headers='{"X-HTTP-Method-Override": "DELETE"}'
+               hx-confirm="Are you sure you want to delete this project and all its tasks?"
+               hx-target="#project-{{ project.id }}"
+               hx-swap="outerHTML"
+               title="Delete project"></i>
+        </div>
+    </div>
+
+    <div class="add-task-row">
+        <form hx-post="{% url 'tasks:create' project.id %}" 
+              hx-target="#task-list-{{ project.id }}" 
+              hx-swap="beforeend"
+              hx-on::after-request="this.reset()"
+              class="d-flex flex-column">
+            {% csrf_token %}
+            <div class="input-group mb-2">
+                <span class="input-group-text">
+                    <i class="bi bi-plus-lg text-success fs-4"></i>
+                </span>
+                <input type="text" 
+                       name="name" 
+                       class="form-control form-control-custom" 
+                       placeholder="Start typing here to create a task..." 
+                       required>
+            </div>
+            <div class="input-group">
+                <span class="input-group-text">
+                    <i class="bi bi-calendar-event"></i>
+                </span>
+                <input type="datetime-local" 
+                       name="deadline" 
+                       class="form-control form-control-custom" 
+                       placeholder="Deadline (optional)">
+                <button class="btn btn-add-task px-4" type="submit">Add Task</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="position-relative">
+        <div class="notebook-line"></div>
+        
+        <ul class="list-group task-list-group" id="task-list-{{ project.id }}">
+            {% for task in project.tasks.all %}
+                {% include 'partials/task_row.html' with task=task %}
+            {% empty %}
+                <li class="list-group-item empty-state" id="empty-{{ project.id }}">
+                    No tasks yet. Add one above to get started!
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>

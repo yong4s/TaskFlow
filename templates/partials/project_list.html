@@ -1,0 +1,8 @@
+{% for project in projects %}
+    {% include 'partials/project_card.html' with project=project %}
+{% empty %}
+    <div class="text-center my-5" id="empty-projects">
+        <h3 class="text-white-50 mb-3">No projects yet!</h3>
+        <p class="text-white-50 mb-4">Create your first project to start organizing your tasks.</p>
+    </div>
+{% endfor %}

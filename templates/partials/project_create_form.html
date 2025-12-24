@@ -1,0 +1,41 @@
+<div class="project-card" id="new-project-form">
+    <div class="project-header">
+        <div class="d-flex align-items-center">
+            <i class="bi bi-calendar3 me-2" style="font-size: 1.2rem; opacity: 0.6;"></i>
+            <span class="project-title">New Project</span>
+        </div>
+        <div class="header-actions">
+            <i class="bi bi-x-lg" 
+               onclick="document.getElementById('new-project-form').remove()"
+               title="Cancel"></i>
+        </div>
+    </div>
+
+    <div class="p-3">
+        <form hx-post="{% url 'projects:create' %}" 
+              hx-target="#new-project-form" 
+              hx-swap="outerHTML">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="id_name" class="form-label">Project Name</label>
+                {{ form.name }}
+                {% if form.name.errors %}
+                    <div class="text-danger mt-1">
+                        {{ form.name.errors.0 }}
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-success">
+                    <i class="bi bi-check-lg me-1"></i> Create Project
+                </button>
+                <button type="button" 
+                        class="btn btn-secondary"
+                        onclick="document.getElementById('new-project-form').remove()">
+                    <i class="bi bi-x-lg me-1"></i> Cancel
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

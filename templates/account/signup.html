@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Create Account - Task Flow{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6 col-md-8 col-sm-10">
+        
+        <div class="project-card">
+            <div class="project-header text-center">
+                <h2 class="project-title mb-0">
+                    <i class="bi bi-person-plus me-2"></i>
+                    Create Your Account
+                </h2>
+            </div>
+            
+            <div class="p-4">
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
+                
+                <form method="post" action="{% url 'account_signup' %}">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="id_email" class="form-label">Email Address</label>
+                        <input type="email" 
+                               class="form-control form-control-custom" 
+                               id="id_email" 
+                               name="email" 
+                               value="{{ form.email.value|default:'' }}"
+                               required 
+                               autofocus
+                               placeholder="Enter your email address">
+                        {% if form.email.errors %}
+                            <div class="text-danger mt-1">{{ form.email.errors.0 }}</div>
+                        {% endif %}
+                        <small class="form-text text-muted">We'll use this email for your account login.</small>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="id_password1" class="form-label">Password</label>
+                        <input type="password" 
+                               class="form-control form-control-custom" 
+                               id="id_password1" 
+                               name="password1" 
+                               required
+                               placeholder="Create a password">
+                        {% if form.password1.errors %}
+                            <div class="text-danger mt-1">{{ form.password1.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="id_password2" class="form-label">Confirm Password</label>
+                        <input type="password" 
+                               class="form-control form-control-custom" 
+                               id="id_password2" 
+                               name="password2" 
+                               required
+                               placeholder="Confirm your password">
+                        {% if form.password2.errors %}
+                            <div class="text-danger mt-1">{{ form.password2.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-global-add">
+                            <i class="bi bi-person-plus me-2"></i>
+                            Create Account
+                        </button>
+                    </div>
+                    
+                    <hr class="my-4">
+                    
+                    <div class="text-center">
+                        <p class="mb-0">Already have an account?</p>
+                        <a href="{% url 'account_login' %}" class="btn btn-outline-primary mt-2">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>
+                            Sign In
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+    </div>
+</div>
+{% endblock %}

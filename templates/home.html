@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Task Flow - Your Projects{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10 col-sm-12">
+        
+        {% if not user.is_authenticated %}
+            <div class="text-center mb-4">
+                <h1 class="text-white mb-3">Welcome to Task Flow</h1>
+                <p class="text-white-50 mb-4">Organize your projects and tasks efficiently</p>
+                <a href="/admin/login/" class="btn btn-global-add me-3">Sign In</a>
+            </div>
+        {% else %}
+            <div class="text-center mb-4">
+                <button class="btn btn-global-add"
+                        hx-get="{% url 'projects:create' %}" 
+                        hx-target="#projects-container" 
+                        hx-swap="afterbegin">
+                    <i class="bi bi-plus-lg me-2"></i> Add TODO List
+                </button>
+            </div>
+
+            <div id="projects-container">
+                {% for project in projects %}
+                    {% include 'partials/project_card.html' with project=project %}
+                {% empty %}
+                    <div class="text-center my-5" id="empty-projects">
+                        <h3 class="text-white-50 mb-3">No projects yet!</h3>
+                        <p class="text-white-50 mb-4">Create your first project to start organizing your tasks.</p>
+                    </div>
+                {% endfor %}
+            </div>
+            
+            {% if projects %}
+                <div class="text-center mt-3">
+                    <small class="text-white-50">
+                        You have {{ projects|length }} project{{ projects|length|pluralize }}
+                    </small>
+                </div>
+            {% endif %}
+        {% endif %}
+
+    </div>
+</div>
+
+<script>
+document.body.addEventListener('htmx:afterRequest', function(event) {
+    if (event.detail.successful) {
+        const emptyDiv = document.getElementById('empty-projects');
+        if (emptyDiv && document.querySelectorAll('.project-card').length > 0) {
+            emptyDiv.remove();
+        }
+    }
+});
+</script>
+{% endblock %}

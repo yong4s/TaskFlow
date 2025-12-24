@@ -1,0 +1,7 @@
+{% for task in tasks %}
+    {% include 'partials/task_row.html' with task=task %}
+{% empty %}
+    <li class="list-group-item empty-state" id="empty-{{ project_id }}">
+        No tasks yet. Add one above to get started!
+    </li>
+{% endfor %}
