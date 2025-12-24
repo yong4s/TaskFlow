@@ -1,0 +1,49 @@
+<li class="list-group-item" id="task-{{ task.id }}">
+    <div class="form-check p-0 m-0 d-flex align-items-center w-100">
+        <input type="checkbox" 
+               {% if task.status == 'done' %}checked{% endif %}
+               hx-post="{% url 'tasks:toggle' task.id %}"
+               hx-headers='{"X-HTTP-Method-Override": "PATCH"}'
+               hx-target="#task-list-{{ task.project.id }}"
+               hx-swap="innerHTML"
+               style="margin-right: 15px;">
+        
+        <div class="flex-grow-1 ms-3">
+            <div class="d-flex align-items-center">
+                <span class="task-text {% if task.status == 'done' %}completed{% endif %} me-2">
+                    {{ task.name }}
+                </span>
+                <span class="badge priority-badge priority-{{ task.priority }}">
+                    {% if task.priority == 1 %}Very Low{% elif task.priority == 2 %}Low{% elif task.priority == 3 %}Medium{% elif task.priority == 4 %}High{% elif task.priority == 5 %}Very High{% endif %}
+                </span>
+            </div>
+            {% if task.deadline %}
+                <small class="text-muted d-block">
+                    <i class="bi bi-calendar-event"></i> {{ task.deadline|date:"M d, Y H:i" }}
+                </small>
+            {% endif %}
+        </div>
+
+        <div class="task-actions">
+            <i class="bi bi-arrow-down-up" style="cursor: move;" title="Drag to reorder"></i>
+            
+            <span class="text-muted mx-1">|</span>
+            
+            <i class="bi bi-pencil-fill" 
+               style="cursor: pointer;"
+               hx-get="{% url 'tasks:edit_form' task.id %}"
+               hx-target="#task-{{ task.id }}"
+               hx-swap="outerHTML"
+               title="Edit task"></i>
+            
+            <i class="bi bi-trash-fill" 
+               style="cursor: pointer;"
+               hx-post="{% url 'tasks:delete' task.id %}"
+               hx-headers='{"X-HTTP-Method-Override": "DELETE"}'
+               hx-target="#task-{{ task.id }}"
+               hx-swap="outerHTML"
+               hx-confirm="Are you sure you want to delete this task?"
+               title="Delete task"></i>
+        </div>
+    </div>
+</li>

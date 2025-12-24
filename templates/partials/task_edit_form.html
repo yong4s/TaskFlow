@@ -1,0 +1,75 @@
+<li class="list-group-item" id="task-{{ task.id }}">
+    <div class="d-flex align-items-center w-100">
+        <input type="checkbox" 
+               {% if task.status == 'done' %}checked{% endif %}
+               hx-post="{% url 'tasks:toggle' task.id %}"
+               hx-headers='{"X-HTTP-Method-Override": "PATCH"}'
+               hx-target="#task-{{ task.id }}"
+               hx-swap="outerHTML"
+               title="Toggle completion"
+               style="margin-right: 15px;">
+        
+        <form hx-post="{% url 'tasks:update' task.id %}"
+              hx-target="#task-list-{{ task.project.id }}"
+              hx-swap="innerHTML"
+              class="flex-grow-1 ms-3 d-flex align-items-center">
+            {% csrf_token %}
+            
+            <div class="flex-grow-1 me-2">
+                <input type="text" 
+                       name="name" 
+                       value="{{ task.name }}"
+                       class="form-control form-control-sm{% if form_errors.name %} is-invalid{% endif %}"
+                       placeholder="Task name"
+                       required
+                       autofocus>
+                {% if form_errors.name %}
+                    <div class="invalid-feedback">
+                        {{ form_errors.name.0 }}
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="me-2">
+                <select name="priority" class="form-select form-select-sm{% if form_errors.priority %} is-invalid{% endif %}">
+                    <option value="1" {% if task.priority == 1 %}selected{% endif %}>Very Low</option>
+                    <option value="2" {% if task.priority == 2 %}selected{% endif %}>Low</option>
+                    <option value="3" {% if task.priority == 3 %}selected{% endif %}>Medium</option>
+                    <option value="4" {% if task.priority == 4 %}selected{% endif %}>High</option>
+                    <option value="5" {% if task.priority == 5 %}selected{% endif %}>Very High</option>
+                </select>
+                {% if form_errors.priority %}
+                    <div class="invalid-feedback">
+                        {{ form_errors.priority.0 }}
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="me-2">
+                <input type="datetime-local" 
+                       name="deadline" 
+                       value="{% if task.deadline %}{{ task.deadline|date:'Y-m-d\TH:i' }}{% endif %}"
+                       class="form-control form-control-sm{% if form_errors.deadline %} is-invalid{% endif %}"
+                       placeholder="Deadline (optional)">
+                {% if form_errors.deadline %}
+                    <div class="invalid-feedback">
+                        {{ form_errors.deadline.0 }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="btn btn-sm btn-success me-1" title="Save changes">
+                <i class="bi bi-check-lg"></i>
+            </button>
+            
+            <button type="button" 
+                    class="btn btn-sm btn-secondary"
+                    hx-get="{% url 'tasks:cancel_edit' task.id %}"
+                    hx-target="#task-{{ task.id }}"
+                    hx-swap="outerHTML"
+                    title="Cancel">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </form>
+    </div>
+</li>
