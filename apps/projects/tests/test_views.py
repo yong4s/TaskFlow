@@ -11,9 +11,6 @@ class ProjectViewsTest(TestCase):
         self.user = User.objects.create_user(email='test@example.com', password='password')
         self.client.force_login(self.user)
         self.create_url = reverse('projects:create')
-        # Dashboard URL може називатися 'home' або 'project-list'
-        # Перевірте urls.py, тут припускаємо 'projects:list' або 'home'
-        # У вашому urls.py projects:list -> path('', ...)
         self.dashboard_url = reverse('projects:list')
 
     def test_project_list_view(self):
@@ -48,7 +45,6 @@ class ProjectViewsTest(TestCase):
             HTTP_HX_REQUEST='true'
         )
 
-        # Виправлено: ProjectCreateView повертає 200 (render), а не 422
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'partials/project_create_form.html')
         self.assertContains(response, 'is-invalid')
@@ -59,8 +55,6 @@ class ProjectViewsTest(TestCase):
         url = reverse('projects:update', kwargs={'project_id': project.id})
         data = {'name': 'New Name'}
 
-        # Виправлено: ProjectUpdateView має ТІЛЬКИ метод patch
-        # Використовуємо client.patch і вказуємо content_type для форми
         response = self.client.patch(
             url,
             data,

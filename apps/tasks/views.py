@@ -1,11 +1,9 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpRequest
-from django.http import HttpResponse
+from django.http import HttpRequest, HttpResponse, QueryDict
 from django.shortcuts import render
 from django.views import View
 
-from apps.tasks.forms import TaskCreateForm
-from apps.tasks.forms import TaskUpdateForm
+from apps.tasks.forms import TaskCreateForm, TaskUpdateForm
 from apps.tasks.services import TaskService
 
 
@@ -27,11 +25,21 @@ class TaskCreateView(BaseTaskView):
             )
             return render(request, 'partials/task_row.html', {'task': task})
 
-        return HttpResponse(form.errors.as_json(), status=400)
+        return render(
+            request, 
+            'partials/task_create_form.html', 
+            {'form': form, 'project_id': project_id}, 
+            status=422
+        )
 
 
-class TaskUpdateView(BaseTaskView):
-    def _handle_update(self, request: HttpRequest, task_id: int, data) -> HttpResponse:
+class TaskResourceView(BaseTaskView):
+    def patch(self, request: HttpRequest, task_id: int) -> HttpResponse:
+        if request.content_type == 'application/x-www-form-urlencoded' and request.body:
+            data = QueryDict(request.body)
+        else:
+            data = request.POST
+
         form = TaskUpdateForm(data)
         if form.is_valid():
             update_data = {'title': form.cleaned_data['name']}
@@ -46,33 +54,17 @@ class TaskUpdateView(BaseTaskView):
 
         task = self.service.get_user_task(request.user, task_id)
         return render(request, 'partials/task_edit_form.html', {'task': task, 'form_errors': form.errors}, status=422)
-
-    def patch(self, request: HttpRequest, task_id: int) -> HttpResponse:
-        from django.http import QueryDict
-
-        data = QueryDict(request.body) if request.body else request.POST
-        return self._handle_update(request, task_id, data)
-
-    def post(self, request: HttpRequest, task_id: int) -> HttpResponse:
-        return self._handle_update(request, task_id, request.POST)
-
-
-class TaskDeleteView(BaseTaskView):
+    
     def delete(self, request: HttpRequest, task_id: int) -> HttpResponse:
         self.service.delete_task(request.user, task_id)
         return HttpResponse('')
 
 
-class TaskActionView(BaseTaskView):
+class TaskToggleView(BaseTaskView):
     def post(self, request: HttpRequest, task_id: int) -> HttpResponse:
-        action = request.POST.get('action')
-        
-        if action == 'toggle':
-            task = self.service.toggle_task_status(request.user, task_id)
-            tasks = self.service.get_project_tasks_sorted(request.user, task.project.id)
-            return render(request, 'partials/task_list.html', {'tasks': tasks, 'project_id': task.project.id})
-        else:
-            return HttpResponse('Invalid action', status=400)
+        task = self.service.toggle_task_status(request.user, task_id)
+        tasks = self.service.get_project_tasks_sorted(request.user, task.project.id)
+        return render(request, 'partials/task_list.html', {'tasks': tasks, 'project_id': task.project.id})
 
 
 

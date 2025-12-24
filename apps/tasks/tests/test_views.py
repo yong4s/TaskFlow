@@ -40,11 +40,9 @@ class TaskViewsTest(TestCase):
             HTTP_HX_REQUEST='true'
         )
 
-        # Виправлено: у вашому View стоїть status=400
         self.assertEqual(response.status_code, 400)
 
     def test_toggle_task_status(self):
-        # Виправлено: прибрано user=self.user
         task = Task.objects.create(name="Task to Toggle", project=self.project)
         action_url = reverse('tasks:action', kwargs={'task_id': task.id})
 
@@ -59,7 +57,6 @@ class TaskViewsTest(TestCase):
         self.assertEqual(task.status, Task.Status.DONE)
 
     def test_update_task_success(self):
-        # Виправлено: прибрано user=self.user
         task = Task.objects.create(name="Old Task", project=self.project)
         url = reverse('tasks:update', kwargs={'task_id': task.id})
         data = {
@@ -68,10 +65,10 @@ class TaskViewsTest(TestCase):
             'deadline': ''
         }
 
-        # Використовуємо POST, оскільки TaskUpdateView має метод post
-        response = self.client.post(
+        response = self.client.put(
             url,
             data,
+            content_type='application/x-www-form-urlencoded',
             HTTP_HX_REQUEST='true'
         )
 
@@ -81,7 +78,6 @@ class TaskViewsTest(TestCase):
         self.assertEqual(task.priority, 4)
 
     def test_delete_task(self):
-        # Виправлено: прибрано user=self.user
         task = Task.objects.create(name="Task to Delete", project=self.project)
         delete_url = reverse('tasks:delete', kwargs={'task_id': task.id})
 
@@ -98,13 +94,10 @@ class TaskViewsTest(TestCase):
         other_user = User.objects.create_user(email='other@example.com', password='password')
         self.client.force_login(other_user)
 
-        # Виправлено: прибрано user=self.user
         task = Task.objects.create(name="My Task", project=self.project)
         delete_url = reverse('tasks:delete', kwargs={'task_id': task.id})
 
         response = self.client.delete(delete_url)
 
-        # Оскільки в DAL/Service перевірка доступу може викидати помилку
-        # або повертати 404, перевіряємо, що це не 200
         self.assertNotEqual(response.status_code, 200)
         self.assertTrue(Task.objects.filter(id=task.id).exists())

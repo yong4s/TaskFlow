@@ -2,15 +2,14 @@
     <div class="d-flex align-items-center w-100">
         <input type="checkbox" 
                {% if task.status == 'done' %}checked{% endif %}
-               hx-post="{% url 'tasks:action' task.id %}"
-               hx-vals='{"action": "toggle"}'
+               hx-post="{% url 'tasks:toggle' task.id %}"
                hx-target="closest ul"
                hx-swap="morph:innerHTML"
                hx-on::after-swap="htmx.process(this.closest('ul'))"
                title="Toggle completion"
                style="margin-right: 15px;">
         
-        <form hx-post="{% url 'tasks:update' task.id %}"
+        <form hx-patch="{% url 'tasks:resource' task.id %}"
               hx-target="closest ul"
               hx-swap="morph:innerHTML"
               class="flex-grow-1 ms-3 d-flex align-items-center">

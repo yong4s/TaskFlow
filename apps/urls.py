@@ -18,12 +18,12 @@ from django.contrib import admin
 from django.urls import include
 from django.urls import path
 
-from apps.projects.views import DashboardView
+from apps.projects.views import ProjectListView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
-    path('', DashboardView.as_view(), name='dashboard'),
+    path('', ProjectListView.as_view(), name='dashboard'),
     path('projects/', include('apps.projects.urls')),
     path('tasks/', include('apps.tasks.urls')),
 ]

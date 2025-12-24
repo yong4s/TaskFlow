@@ -16,11 +16,32 @@
         {% else %}
             <div class="text-center mb-4">
                 <button class="btn btn-global-add"
-                        hx-get="{% url 'projects:create' %}" 
-                        hx-target="#projects-container" 
-                        hx-swap="afterbegin">
+                        onclick="document.getElementById('create-form').style.display = 'block'">
                     <i class="bi bi-plus-lg me-2"></i> Add TODO List
                 </button>
+            </div>
+            
+            <div id="create-form" style="display: none;" class="mb-4">
+                <form hx-post="{% url 'projects:create' %}" 
+                      hx-target="#projects-container" 
+                      hx-swap="afterbegin"
+                      hx-on::after-request="this.reset(); document.getElementById('create-form').style.display = 'none'">
+                    {% csrf_token %}
+                    <div class="input-group mb-3">
+                        <input type="text" 
+                               name="name" 
+                               class="form-control" 
+                               placeholder="Enter project name" 
+                               required>
+                        <button type="submit" class="btn btn-success">
+                            <i class="bi bi-plus-lg"></i> Create
+                        </button>
+                        <button type="button" class="btn btn-secondary" 
+                                onclick="document.getElementById('create-form').style.display = 'none'">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
             </div>
 
             <div id="projects-container">

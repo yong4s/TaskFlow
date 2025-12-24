@@ -10,8 +10,7 @@
                   title="Click to edit">{{ project.name }}</span>
             
             <template x-if="editing">
-                <form hx-post="{% url 'projects:update' project.id %}"
-                      hx-headers='{"X-HTTP-Method-Override": "PATCH"}'
+                <form hx-patch="{% url 'projects:resource' project.id %}"
                       hx-target="#project-{{ project.id }}"
                       hx-swap="outerHTML"
                       hx-on::before-request="console.log('Form submitting')"
@@ -47,8 +46,7 @@
         <div class="header-actions">
             <i class="bi bi-pencil-fill" @click="editing = true" title="Edit project name"></i>
             <i class="bi bi-trash-fill" 
-               hx-post="{% url 'projects:delete' project.id %}"
-               hx-headers='{"X-HTTP-Method-Override": "DELETE"}'
+               hx-delete="{% url 'projects:resource' project.id %}"
                hx-confirm="Are you sure you want to delete this project and all its tasks?"
                hx-target="#project-{{ project.id }}"
                hx-swap="outerHTML"
@@ -94,10 +92,6 @@
             hx-ext="morph">
             {% for task in project.tasks.all %}
                 {% include 'partials/task_row.html' with task=task %}
-            {% empty %}
-                <li class="list-group-item empty-state" id="empty-{{ project.id }}">
-                    No tasks yet. Add one above to get started!
-                </li>
             {% endfor %}
         </ul>
     </div>
