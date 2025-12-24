@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Project
+from apps.projects.models import Project
 
 
 @admin.register(Project)
@@ -10,13 +10,14 @@ class ProjectAdmin(admin.ModelAdmin):
     search_fields = ['name', 'user__email']
     readonly_fields = ['created_at', 'updated_at']
     ordering = ['-created_at']
-    
+
     fieldsets = (
-        (None, {
-            'fields': ('name', 'user')
-        }),
-        ('Timestamps', {
-            'fields': ('created_at', 'updated_at'),
-            'classes': ('collapse',),
-        }),
+        (None, {'fields': ('name', 'user')}),
+        (
+            'Timestamps',
+            {
+                'fields': ('created_at', 'updated_at'),
+                'classes': ('collapse',),
+            },
+        ),
     )

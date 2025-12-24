@@ -1,15 +1,17 @@
+"""Base repository implementing the Repository pattern for data access."""
 from abc import ABC
 from typing import Any
+
 from django.db import models
 from django.db.models import QuerySet
 
-from .decorators import handle_dal_exceptions
+from apps.utils.decorators import handle_dal_exceptions
 
 
 class BaseRepository(ABC):
     """
     Base repository class providing common CRUD operations for Django models.
-    
+
     This class follows the Repository pattern and provides database
     access with automatic error handling.
     """
@@ -18,9 +20,9 @@ class BaseRepository(ABC):
         self.model = model
 
     @handle_dal_exceptions
-    def get_by_id(self, id: int) -> models.Model:
+    def get_by_id(self, obj_id: int) -> models.Model:
         """Get a single object by its ID."""
-        return self.model.objects.get(id=id)
+        return self.model.objects.get(id=obj_id)
 
     def get_all(self) -> QuerySet:
         """Get all objects."""
@@ -50,5 +52,3 @@ class BaseRepository(ABC):
     def exists(self, **kwargs: Any) -> bool:
         """Check if objects matching the given criteria exist."""
         return self.model.objects.filter(**kwargs).exists()
-
-

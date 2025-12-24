@@ -1,62 +1,62 @@
-from typing import TYPE_CHECKING, List, Optional
+from typing import List
+from typing import Optional
+from typing import TYPE_CHECKING
 
-from apps.utils.exceptions import PermissionDeniedError, ValidationError
+from apps.utils.exceptions import PermissionDeniedError
+from apps.utils.exceptions import ValidationError
 
 if TYPE_CHECKING:
     from apps.accounts.models import User
-    from .models import Project
+    from apps.projects.models import Project
 
 
 class ProjectValidator:
-
+    """Handles project validation and business rules."""
     MAX_NAME_LENGTH = 255
-    
+
     def validate_name_format(self, name: str) -> str:
         name = name.strip()
-        
+
         if not name:
             field = 'name'
             message = 'Project name cannot be empty'
             raise ValidationError(field, message)
-        
+
         if len(name) > self.MAX_NAME_LENGTH:
             field = 'name'
             message = f'Project name too long (max {self.MAX_NAME_LENGTH} characters)'
             raise ValidationError(field, message)
-        
+
         return name
-    
-    def validate_unique_name(self, existing_projects: List['Project'], name: str, exclude_id: Optional[int] = None):
-        name_lower = name.lower()
-        
-        for project in existing_projects:
-            if project.name.lower() == name_lower and project.id != exclude_id:
-                field = 'name'
-                message = 'Project with this name already exists'
-                raise ValidationError(field, message)
-    
+
     def validate_ownership(self, user: 'User', project: 'Project'):
         if project.user != user:
             message = 'You can only access your own projects'
             raise PermissionDeniedError(message)
-    
-    def validate_create_project(self, user: 'User', name: str, existing_projects: List['Project']) -> str:
-        clean_name = self.validate_name_format(name)
-        self.validate_unique_name(existing_projects, clean_name)
-        return clean_name
-    
-    def validate_update_project(self, user: 'User', project: 'Project', existing_projects: List['Project'], name: str = None) -> Optional[str]:
-        self.validate_ownership(user, project)
-        
-        if name is not None:
-            clean_name = self.validate_name_format(name)
-            self.validate_unique_name(existing_projects, clean_name, exclude_id=project.id)
-            return clean_name
-        
-        return None
-    
+
     def validate_delete_project(self, user: 'User', project: 'Project'):
         self.validate_ownership(user, project)
-    
+
     def validate_access_project(self, user: 'User', project: 'Project'):
         self.validate_ownership(user, project)
+
+    def validate_create_project(self, name: str, existing_projects_query) -> str:
+        """Complete validation for project creation."""
+        clean_name = self.validate_name_format(name)
+
+        if existing_projects_query.exists():
+            msg = 'name'
+            raise ValidationError(msg, 'Project with this name already exists')
+
+        return clean_name
+
+    def validate_update_project_name(self, user: 'User', project: 'Project', name: str, existing_projects_query) -> str:
+        """Complete validation for project name update."""
+        self.validate_ownership(user, project)
+        clean_name = self.validate_name_format(name)
+
+        if existing_projects_query.exists():
+            msg = 'name'
+            raise ValidationError(msg, 'Project with this name already exists')
+
+        return clean_name

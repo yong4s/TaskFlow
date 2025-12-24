@@ -51,4 +51,4 @@ class UserManager(BaseUserManager):
         return user
 
     def get_by_natural_key(self, username):
-        return self.get(**{'%s__iexact' % self.model.USERNAME_FIELD: username})
+        return self.get(**{f'{self.model.USERNAME_FIELD}__iexact': username})
