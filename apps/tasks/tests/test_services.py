@@ -53,7 +53,11 @@ class TestTaskService(TestCase):
         self.mock_project_service.get_user_project.assert_called_once_with(self.user, project_id)
         self.mock_validator.validate_create_task.assert_called_once_with(title)
         self.mock_dal.create.assert_called_once_with(
-            name=clean_title, project=project_mock, status=Task.Status.IN_PROGRESS, priority=Task.Priority.MEDIUM, deadline=None
+            name=clean_title,
+            project=project_mock,
+            status=Task.Status.IN_PROGRESS,
+            priority=Task.Priority.MEDIUM,
+            deadline=None
         )
         self.assertEqual(result, created_task_mock)
 

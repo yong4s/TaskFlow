@@ -35,7 +35,11 @@ class TaskService:
         clean_title = self.validator.validate_create_task(title)
 
         task = self.task_dal.create(
-            name=clean_title, project=project, status=Task.Status.IN_PROGRESS, priority=Task.Priority.MEDIUM, deadline=deadline
+            name=clean_title,
+            project=project,
+            status=Task.Status.IN_PROGRESS,
+            priority=Task.Priority.MEDIUM,
+            deadline=deadline
         )
 
         logger.info(r"Task created: %s \%s' by user %s", task.id, clean_title, user.id)

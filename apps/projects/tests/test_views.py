@@ -1,6 +1,7 @@
+from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
-from django.contrib.auth import get_user_model
+
 from apps.projects.models import Project
 
 User = get_user_model()
@@ -8,14 +9,14 @@ User = get_user_model()
 
 class ProjectViewsTest(TestCase):
     def setUp(self):
-        self.user = User.objects.create_user(email='test@example.com', password='password')
+        self.user = User.objects.create_user(email='test@example.com', password='testpass123')
         self.client.force_login(self.user)
         self.create_url = reverse('projects:create')
         self.dashboard_url = reverse('projects:list')
 
     def test_project_list_view(self):
-        Project.objects.create(name="Project A", user=self.user)
-        Project.objects.create(name="Project B", user=self.user)
+        Project.objects.create(name='Project A', user=self.user)
+        Project.objects.create(name='Project B', user=self.user)
 
         response = self.client.get(self.dashboard_url)
 
@@ -51,7 +52,7 @@ class ProjectViewsTest(TestCase):
         self.assertFalse(Project.objects.filter(name='').exists())
 
     def test_update_project_success(self):
-        project = Project.objects.create(name="Old Name", user=self.user)
+        project = Project.objects.create(name='Old Name', user=self.user)
         url = reverse('projects:update', kwargs={'project_id': project.id})
         data = {'name': 'New Name'}
 
@@ -68,7 +69,7 @@ class ProjectViewsTest(TestCase):
         self.assertEqual(project.name, 'New Name')
 
     def test_delete_project_success(self):
-        project = Project.objects.create(name="To Delete", user=self.user)
+        project = Project.objects.create(name='To Delete', user=self.user)
         url = reverse('projects:delete', kwargs={'project_id': project.id})
 
         response = self.client.delete(
@@ -77,5 +78,5 @@ class ProjectViewsTest(TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.content, b"")
+        self.assertEqual(response.content, b'')
         self.assertFalse(Project.objects.filter(id=project.id).exists())

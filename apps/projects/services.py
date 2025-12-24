@@ -5,7 +5,6 @@ from django.db.models import QuerySet
 
 from apps.projects.dal import ProjectRepository
 from apps.projects.validators import ProjectValidator
-from apps.utils.exceptions import ValidationError
 
 logger = logging.getLogger(__name__)
 

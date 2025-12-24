@@ -1,9 +1,12 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpRequest, HttpResponse, QueryDict
+from django.http import HttpRequest
+from django.http import HttpResponse
+from django.http import QueryDict
 from django.shortcuts import render
 from django.views import View
 
-from apps.projects.forms import ProjectCreateForm, ProjectUpdateForm
+from apps.projects.forms import ProjectCreateForm
+from apps.projects.forms import ProjectUpdateForm
 from apps.projects.services import ProjectService
 
 

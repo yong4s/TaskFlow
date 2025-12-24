@@ -1,9 +1,12 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpRequest, HttpResponse, QueryDict
+from django.http import HttpRequest
+from django.http import HttpResponse
+from django.http import QueryDict
 from django.shortcuts import render
 from django.views import View
 
-from apps.tasks.forms import TaskCreateForm, TaskUpdateForm
+from apps.tasks.forms import TaskCreateForm
+from apps.tasks.forms import TaskUpdateForm
 from apps.tasks.services import TaskService
 
 
@@ -26,9 +29,9 @@ class TaskCreateView(BaseTaskView):
             return render(request, 'partials/task_row.html', {'task': task})
 
         return render(
-            request, 
-            'partials/task_create_form.html', 
-            {'form': form, 'project_id': project_id}, 
+            request,
+            'partials/task_create_form.html',
+            {'form': form, 'project_id': project_id},
             status=422
         )
 
@@ -54,7 +57,7 @@ class TaskResourceView(BaseTaskView):
 
         task = self.service.get_user_task(request.user, task_id)
         return render(request, 'partials/task_edit_form.html', {'task': task, 'form_errors': form.errors}, status=422)
-    
+
     def delete(self, request: HttpRequest, task_id: int) -> HttpResponse:
         self.service.delete_task(request.user, task_id)
         return HttpResponse('')
