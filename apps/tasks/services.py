@@ -35,7 +35,7 @@ class TaskService:
         clean_title = self.validator.validate_create_task(title)
 
         task = self.task_dal.create(
-            name=clean_title, project=project, status=Task.Status.NEW, priority=Task.Priority.MEDIUM, deadline=deadline
+            name=clean_title, project=project, status=Task.Status.IN_PROGRESS, priority=Task.Priority.MEDIUM, deadline=deadline
         )
 
         logger.info(r"Task created: %s \%s' by user %s", task.id, clean_title, user.id)
@@ -83,10 +83,11 @@ class TaskService:
         task = self.task_dal.get_by_id(task_id)
         self.validator.validate_ownership(user, task)
 
-        new_status = Task.Status.NEW if task.status == Task.Status.DONE else Task.Status.DONE
+        new_status = Task.Status.IN_PROGRESS if task.status == Task.Status.DONE else Task.Status.DONE
         updated_task = self.task_dal.update(task, status=new_status)
         logger.info('Task status toggled: %s to %s by user %s', task_id, new_status, user.id)
         return updated_task
+
 
     def get_user_task(self, user: 'User', task_id: int) -> Model:
         task = self.task_dal.get_by_id(task_id)

@@ -89,7 +89,9 @@
     <div class="position-relative">
         <div class="notebook-line"></div>
         
-        <ul class="list-group task-list-group" id="task-list-{{ project.id }}">
+        <ul class="list-group task-list-group" 
+            id="task-list-{{ project.id }}" 
+            hx-ext="morph">
             {% for task in project.tasks.all %}
                 {% include 'partials/task_row.html' with task=task %}
             {% empty %}

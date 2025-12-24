@@ -2,10 +2,11 @@
     <div class="form-check p-0 m-0 d-flex align-items-center w-100">
         <input type="checkbox" 
                {% if task.status == 'done' %}checked{% endif %}
-               hx-post="{% url 'tasks:toggle' task.id %}"
-               hx-headers='{"X-HTTP-Method-Override": "PATCH"}'
-               hx-target="#task-list-{{ task.project.id }}"
-               hx-swap="innerHTML"
+               hx-post="{% url 'tasks:action' task.id %}"
+               hx-vals='{"action": "toggle"}'
+               hx-target="closest ul"
+               hx-swap="morph:innerHTML"
+               hx-on::after-swap="htmx.process(this.closest('ul'))"
                style="margin-right: 15px;">
         
         <div class="flex-grow-1 ms-3">
@@ -28,6 +29,7 @@
             <i class="bi bi-arrow-down-up" style="cursor: move;" title="Drag to reorder"></i>
             
             <span class="text-muted mx-1">|</span>
+            
             
             <i class="bi bi-pencil-fill" 
                style="cursor: pointer;"

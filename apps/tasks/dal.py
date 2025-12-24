@@ -54,9 +54,8 @@ class TaskRepository(BaseRepository):
         """Get tasks sorted with active tasks by priority, done tasks at bottom."""
         return self.filter_by(project=project).order_by(
             Case(
-                When(status='new', then=1),
-                When(status='in_progress', then=2),
-                When(status='done', then=3),
+                When(status='in_progress', then=1),
+                When(status='done', then=2),
                 output_field=IntegerField(),
             ),
             '-priority',

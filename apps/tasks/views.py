@@ -63,11 +63,17 @@ class TaskDeleteView(BaseTaskView):
         return HttpResponse('')
 
 
-class TaskToggleView(BaseTaskView):
-    def patch(self, request: HttpRequest, task_id: int) -> HttpResponse:
-        task = self.service.toggle_task_status(request.user, task_id)
-        tasks = self.service.get_project_tasks_sorted(request.user, task.project.id)
-        return render(request, 'partials/task_list.html', {'tasks': tasks, 'project_id': task.project.id})
+class TaskActionView(BaseTaskView):
+    def post(self, request: HttpRequest, task_id: int) -> HttpResponse:
+        action = request.POST.get('action')
+        
+        if action == 'toggle':
+            task = self.service.toggle_task_status(request.user, task_id)
+            tasks = self.service.get_project_tasks_sorted(request.user, task.project.id)
+            return render(request, 'partials/task_list.html', {'tasks': tasks, 'project_id': task.project.id})
+        else:
+            return HttpResponse('Invalid action', status=400)
+
 
 
 class TaskEditFormView(BaseTaskView):

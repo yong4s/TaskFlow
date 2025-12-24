@@ -53,7 +53,7 @@ class TestTaskService(TestCase):
         self.mock_project_service.get_user_project.assert_called_once_with(self.user, project_id)
         self.mock_validator.validate_create_task.assert_called_once_with(title)
         self.mock_dal.create.assert_called_once_with(
-            name=clean_title, project=project_mock, status=Task.Status.NEW, priority=Task.Priority.MEDIUM, deadline=None
+            name=clean_title, project=project_mock, status=Task.Status.IN_PROGRESS, priority=Task.Priority.MEDIUM, deadline=None
         )
         self.assertEqual(result, created_task_mock)
 
@@ -155,7 +155,7 @@ class TestTaskServiceIntegration(TestCase):
         """Test complete task lifecycle: create, update, complete."""
         task = self.service.create_task(self.user, self.project.id, 'Test Task')
         self.assertEqual(task.name, 'Test Task')
-        self.assertEqual(task.status, Task.Status.NEW)
+        self.assertEqual(task.status, Task.Status.IN_PROGRESS)
         self.assertEqual(task.priority, Task.Priority.MEDIUM)
 
         updated_task = self.service.set_priority(self.user, task.id, Task.Priority.HIGH)

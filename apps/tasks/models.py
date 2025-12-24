@@ -5,7 +5,6 @@ from django.db import models
 
 class Task(models.Model):
     class Status(models.TextChoices):
-        NEW = 'new', 'New'
         IN_PROGRESS = 'in_progress', 'In Progress'
         DONE = 'done', 'Done'
 
@@ -18,7 +17,7 @@ class Task(models.Model):
 
     name = models.CharField(max_length=255)
     project = models.ForeignKey('projects.Project', on_delete=models.CASCADE, related_name='tasks')
-    status = models.CharField(max_length=20, choices=Status.choices, default=Status.NEW, db_index=True)
+    status = models.CharField(max_length=20, choices=Status.choices, default=Status.IN_PROGRESS, db_index=True)
     priority = models.IntegerField(
         choices=Priority.choices, default=Priority.MEDIUM, validators=[MinValueValidator(1), MaxValueValidator(5)]
     )
