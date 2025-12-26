@@ -1,9 +1,6 @@
-from typing import List
-from typing import Optional
-from typing import TYPE_CHECKING
+from typing import List, Optional, TYPE_CHECKING
 
-from apps.utils.exceptions import PermissionDeniedError
-from apps.utils.exceptions import ValidationError
+from apps.utils.exceptions import PermissionDeniedError, ValidationError
 
 if TYPE_CHECKING:
     from apps.accounts.models import User

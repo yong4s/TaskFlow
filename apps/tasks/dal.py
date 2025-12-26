@@ -1,10 +1,7 @@
 from datetime import datetime
 from typing import TYPE_CHECKING
 
-from django.db.models import Case
-from django.db.models import IntegerField
-from django.db.models import QuerySet
-from django.db.models import When
+from django.db.models import Case, IntegerField, QuerySet, When
 
 from apps.tasks.models import Task
 from apps.utils.dal import BaseRepository

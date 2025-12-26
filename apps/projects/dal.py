@@ -1,11 +1,7 @@
 from typing import TYPE_CHECKING
 
 from django.apps import apps
-from django.db.models import Case
-from django.db.models import IntegerField
-from django.db.models import Prefetch
-from django.db.models import QuerySet
-from django.db.models import When
+from django.db.models import Case, IntegerField, Prefetch, QuerySet, When
 
 from apps.projects.models import Project
 from apps.utils.dal import BaseRepository

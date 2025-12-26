@@ -7,9 +7,7 @@ from django.utils import timezone
 
 from apps.tasks.models import Task
 from apps.tasks.services import TaskService
-from apps.utils.exceptions import BusinessRuleError
-from apps.utils.exceptions import PermissionDeniedError
-from apps.utils.exceptions import ValidationError
+from apps.utils.exceptions import BusinessRuleError, PermissionDeniedError, ValidationError
 
 User = get_user_model()
 

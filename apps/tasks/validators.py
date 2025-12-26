@@ -3,9 +3,7 @@ from typing import TYPE_CHECKING
 
 from django.utils import timezone
 
-from apps.utils.exceptions import BusinessRuleError
-from apps.utils.exceptions import PermissionDeniedError
-from apps.utils.exceptions import ValidationError
+from apps.utils.exceptions import BusinessRuleError, PermissionDeniedError, ValidationError
 
 if TYPE_CHECKING:
     from apps.accounts.models import User

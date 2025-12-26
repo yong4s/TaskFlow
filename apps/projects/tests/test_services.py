@@ -4,9 +4,7 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 
 from apps.projects.services import ProjectService
-from apps.utils.exceptions import ObjectNotFoundError
-from apps.utils.exceptions import PermissionDeniedError
-from apps.utils.exceptions import ValidationError
+from apps.utils.exceptions import ObjectNotFoundError, PermissionDeniedError, ValidationError
 
 User = get_user_model()
 

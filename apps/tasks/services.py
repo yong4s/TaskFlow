@@ -2,8 +2,7 @@ import logging
 from datetime import datetime
 from typing import TYPE_CHECKING
 
-from django.db.models import Model
-from django.db.models import QuerySet
+from django.db.models import Model, QuerySet
 
 from apps.tasks.dal import TaskRepository
 from apps.tasks.models import Task

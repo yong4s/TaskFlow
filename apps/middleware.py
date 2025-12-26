@@ -1,12 +1,9 @@
 import logging
 from http import HTTPStatus
 
-from django.http import HttpResponse
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 
-from apps.utils.exceptions import BusinessRuleError
-from apps.utils.exceptions import PermissionDeniedError
-from apps.utils.exceptions import ValidationError
+from apps.utils.exceptions import BusinessRuleError, PermissionDeniedError, ValidationError
 
 logger = logging.getLogger(__name__)
 

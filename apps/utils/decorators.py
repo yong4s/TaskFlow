@@ -2,12 +2,9 @@ import logging
 from functools import wraps
 
 from django.core.exceptions import ObjectDoesNotExist
-from django.db import DatabaseError
-from django.db import IntegrityError
+from django.db import DatabaseError, IntegrityError
 
-from apps.utils.exceptions import DALError
-from apps.utils.exceptions import ObjectNotFoundError
-from apps.utils.exceptions import ValidationError
+from apps.utils.exceptions import DALError, ObjectNotFoundError, ValidationError
 
 logger = logging.getLogger(__name__)
 
